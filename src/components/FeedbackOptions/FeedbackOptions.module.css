@@ -1,0 +1,12 @@
+.buttonSection {
+  display: flex;
+  gap: 15px;
+  margin-left: 25px;
+}
+
+.buttons {
+  background-color: rgb(165, 81, 81);
+  color: white;
+  padding: 15px;
+  border: none;
+}
