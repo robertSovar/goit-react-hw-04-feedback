@@ -1,71 +1,76 @@
-import { Component } from 'react';
 import styles from '../Statistics/Statistics.module.css';
 import FeedbackOptions from 'components/FeedbackOptions/FeedbackOptions';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const Notification = ({ message }) => {
   return <p>{message}</p>;
 };
 
-export default class Statistics extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-    isFeedback: false,
-  };
-  render() {
-    const { isFeedback } = this.state;
-    return (
-      <div className={styles.statisticsDiv}>
-        <h2>Please leave Feedback</h2>
-        <FeedbackOptions onLeaveFeedback={this.handleFeedback} />
-        {isFeedback ? (
-          <>
-            <h1> Statistics </h1>
-            <div className={styles.container}>
-              <span> Good: {this.state.good} </span>
-              <span> Neutral: {this.state.neutral}</span>
-              <span> Bad: {this.state.bad}</span>
-              <span> Total: {this.countTotalFeedback()}</span>
-              <span>
-                Positive feedback: {this.countPositiveFeedbackPercentage()}
-              </span>
-            </div>
-          </>
-        ) : (
-          <Notification message="There is no feedback" />
-        )}
-      </div>
-    );
-  }
-  handleFeedback = feedbackType => {
-    this.setState(prevState => ({
-      [feedbackType]: prevState[feedbackType] + 1,
-      isFeedback: true,
-    }));
-  };
+const Statistics = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [isFeedback, setIsFeedback] = useState(false);
 
-  countTotalFeedback() {
-    const good = this.state.good;
-    const neutral = this.state.neutral;
-    const bad = this.state.bad;
+  const countTotalFeedback = () => {
     const total = good + neutral + bad;
     return total;
-  }
+  };
 
-  countPositiveFeedbackPercentage() {
-    const good = this.state.good;
-    const total = this.countTotalFeedback();
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
     const percentage = (good / total) * 100;
     return `${Math.floor(percentage)}%`;
-  }
-
-  static propTypes = {
-    good: PropTypes.number,
-    neutral: PropTypes.number,
-    bad: PropTypes.number,
-    onFeedback: PropTypes.func,
-    isFeedback: PropTypes.bool,
   };
-}
+
+  const handleFeedback = option => {
+    switch (option) {
+      case 'good':
+        setGood(prevState => prevState + 1);
+        setIsFeedback(true);
+        break;
+      case 'neutral':
+        setNeutral(prevState => prevState + 1);
+        setIsFeedback(true);
+        break;
+      case 'bad':
+        setBad(prevState => prevState + 1);
+        setIsFeedback(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <div className={styles.statisticsDiv}>
+      <h2>Please leave Feedback</h2>
+      <FeedbackOptions onLeaveFeedback={handleFeedback} />
+      {isFeedback ? (
+        <>
+          <h1> Statistics </h1>
+          <div className={styles.container}>
+            <span> Good: {good} </span>
+            <span> Neutral: {neutral}</span>
+            <span> Bad: {bad}</span>
+            <span> Total: {countTotalFeedback()}</span>
+            <span>Positive feedback: {countPositiveFeedbackPercentage()}</span>
+          </div>
+        </>
+      ) : (
+        <Notification message="There is no feedback" />
+      )}
+    </div>
+  );
+};
+
+Statistics.propTypes = {
+  good: PropTypes.number,
+  neutral: PropTypes.number,
+  bad: PropTypes.number,
+  onFeedback: PropTypes.func,
+  isFeedback: PropTypes.bool,
+};
+
+export default Statistics;

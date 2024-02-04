@@ -1,32 +1,30 @@
-import { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from '../FeedbackOptions/FeedbackOptions.module.css';
 
-export default class FeedbackOptions extends Component {
-  handleFeedback = feedbackType => {
-    this.props.onLeaveFeedback(feedbackType);
+const FeedbackOptions = ({ onLeaveFeedback }) => {
+  const handleFeedback = type => {
+    onLeaveFeedback(type);
   };
-  render() {
-    return (
-      <div className={styles.buttonSection}>
-        <button
-          className={styles.buttons}
-          onClick={() => this.handleFeedback('good')}
-        >
-          Good
-        </button>
-        <button
-          className={styles.buttons}
-          onClick={() => this.handleFeedback('neutral')}
-        >
-          Neutral
-        </button>
-        <button
-          className={styles.buttons}
-          onClick={() => this.handleFeedback('bad')}
-        >
-          Bad
-        </button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={styles.buttonSection}>
+      <button className={styles.buttons} onClick={() => handleFeedback('good')}>
+        Good
+      </button>
+      <button
+        className={styles.buttons}
+        onClick={() => handleFeedback('neutral')}
+      >
+        Neutral
+      </button>
+      <button className={styles.buttons} onClick={() => handleFeedback('bad')}>
+        Bad
+      </button>
+    </div>
+  );
+};
+
+FeedbackOptions.propTypes = {
+  onLeaveFeedback: PropTypes.func.isRequired,
+};
+
+export default FeedbackOptions;
